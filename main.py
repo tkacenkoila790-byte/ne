@@ -2,7 +2,7 @@ import os, time, random, telebot
 from telebot import types
 
 # Замените ХХХ на ваш реальный токен от @BotFather
-bot = telebot.TeleBot('ХХХ')
+bot = telebot.TeleBot('8908913545:AAFqVtBWMZNTrJQKGJxDPyi3wsSHC9iv77Y')
 ADMIN_ID = 8455479648
 
 M_MAIN = lambda name: (f"👋 *Здравствуй, {name}\\!* Ты попал в крипто\\-бота, основанного на базе решений *@send*\\.\n\n"
@@ -60,11 +60,12 @@ def menu(c):
         res = bot.send_dice(cid, emoji=emo)
         time.sleep(2.5)
         
-        # Исправленная и чистая проверка условий победы
         val = res.dice.value
         is_win = False
-        if emo == "🏀" and val in: is_win = True
-        elif emo == "⚽" and val in: is_win = True
+        
+        # Исправленные и безопасные условия для проверки результатов
+        if emo == "🏀" and (val == 4 or val == 5): is_win = True
+        elif emo == "⚽" and (val == 3 or val == 4 or val == 5): is_win = True
         elif emo == "🎯" and val == 6: is_win = True
         
         win = "🎉 *ГОЛ / ПОПАДАНИЕ\\!*" if is_win else "❌ *ПРОМАХ\\!*"
