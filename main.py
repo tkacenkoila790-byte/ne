@@ -1,8 +1,8 @@
 import os, time, random, telebot
 from telebot import types
 
-# Вставьте ваш токен вместо ХХХ
-bot = telebot.TeleBot('8908913545:AAFqVtBWMZNTrJQKGJxDPyi3wsSHC9iv77Y')
+# Замените ХХХ на ваш реальный токен от @BotFather
+bot = telebot.TeleBot('ХХХ')
 ADMIN_ID = 8455479648
 
 M_MAIN = lambda name: (f"👋 *Здравствуй, {name}\\!* Ты попал в крипто\\-бота, основанного на базе решений *@send*\\.\n\n"
@@ -59,10 +59,17 @@ def menu(c):
         emo = {"g_b": "🏀", "g_f": "⚽", "g_d": "🎯"}[c.data]
         res = bot.send_dice(cid, emoji=emo)
         time.sleep(2.5)
-        is_win = (emo=="🏀" and res.dice.value in) or (emo=="⚽" and res.dice.value in) or (emo=="🎯" and res.dice.value==6)
+        
+        # Исправленная и чистая проверка условий победы
+        val = res.dice.value
+        is_win = False
+        if emo == "🏀" and val in: is_win = True
+        elif emo == "⚽" and val in: is_win = True
+        elif emo == "🎯" and val == 6: is_win = True
+        
         win = "🎉 *ГОЛ / ПОПАДАНИЕ\\!*" if is_win else "❌ *ПРОМАХ\\!*"
         m = types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("🔄 Еще раз", callback_data=c.data), types.InlineKeyboardButton("⬅️ Игры", callback_data="game_center"))
-        bot.send_message(cid, f"{win}\n━━━━━━━━━━\n📊 Очки: `{res.dice.value}`", parse_mode='MarkdownV2', reply_markup=m)
+        bot.send_message(cid, f"{win}\n━━━━━━━━━━\n📊 Очки броска: `{val}`", parse_mode='MarkdownV2', reply_markup=m)
         
     elif c.data == "settings":
         txt = "⚙️ *Настройки*\n━━━━━━━━━━\n🌐 Язык: *Русский*\n🪙 Валюта: *USD*\n📱 Телефон: _нет_"
