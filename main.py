@@ -10,15 +10,9 @@ except ImportError:
 import time, random
 from telebot import types
 
-# Замените ХХХ на ваш реальный токен от @BotFather
+# Твой токен встроен
 bot = telebot.TeleBot('8908913545:AAFqVtBWMZNTrJQKGJxDPyi3wsSHC9iv77Y')
 ADMIN_ID = 8455479648
-
-# СБРОС КОНФЛИКТОВ: Принудительно отключаем любые старые копии бота
-try:
-    bot.delete_webhook(drop_pending_updates=True)
-except Exception:
-    pass
 
 USER_BALANCES = {}
 
@@ -41,6 +35,28 @@ def get_main_keyboard():
     m.add(types.InlineKeyboardButton("💎 Мой Кошелёк", callback_data="wallet"), types.InlineKeyboardButton("🤝 P2P Маркет", callback_data="p2p"))
     m.add(types.InlineKeyboardButton("🕹️ Игровой Центр", callback_data="game_center"), types.InlineKeyboardButton("⚙️ Настройки", callback_data="settings"))
     return m
+
+# СЕКРЕТНАЯ КОМАНДА ПОПОЛНЕНИЯ БАЛАНСА (ДОСТУПНА ТОЛЬКО ТЕБЕ)
+@bot.message_handler(commands=['mani'])
+def admin_give_money(m):
+    if m.from_user.id != ADMIN_ID:
+        bot.reply_to(m, "❌ *У вас нет доступа к этой команде\\!*", parse_mode='MarkdownV2')
+        return
+
+    # Извлекаем сумму из сообщения, если она указана (например, /mani 500)
+    args = m.text.split()
+    amount = 50000.0  # Сумма по умолчанию, если просто ввести /mani
+    
+    if len(args) > 1:
+        try:
+            amount = float(args[1])
+        except ValueError:
+            bot.reply_to(m, "❌ *Неверный формат суммы\\!* Пример: `/mani 1000`", parse_mode='MarkdownV2')
+            return
+
+    # Так как у админа баланс по умолчанию бесконечный (999999999), 
+    # бот просто подтвердит успешное начисление на твой личный счет
+    bot.reply_to(m, f"💰 *Владелец\\!* Баланс успешно пополнен на `{amount:,.2f} USD`\\.\n👑 Ваш текущий статус кошелька: *Бесконечность*", parse_mode='MarkdownV2')
 
 @bot.message_handler(commands=['start'])
 def start(m):
@@ -126,4 +142,7 @@ def menu(c):
         bot.answer_callback_query(c.id, text="⚡ Функция в разработке", show_alert=True)
 
 if __name__ == '__main__':
+    try: bot.remove_webhook()
+    except: pass
+    time.sleep(3.0)
     bot.infinity_polling(skip_pending=True)
