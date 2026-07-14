@@ -1,7 +1,7 @@
 import os, time, random, telebot
 from telebot import types
 
-# Вставьте ваш токен от @BotFather вместо ХХХ
+# Вставьте ваш токен вместо ХХХ
 bot = telebot.TeleBot('8908913545:AAFqVtBWMZNTrJQKGJxDPyi3wsSHC9iv77Y')
 ADMIN_ID = 8455479648
 
@@ -59,7 +59,8 @@ def menu(c):
         emo = {"g_b": "🏀", "g_f": "⚽", "g_d": "🎯"}[c.data]
         res = bot.send_dice(cid, emoji=emo)
         time.sleep(2.5)
-        win = "🎉 *ГОЛ / ПОПАДАНИЕ\\!*" if (emo=="🏀" and res.dice.value in) or (emo=="⚽" and res.dice.value in) or (emo=="🎯" and res.dice.value==6) else "❌ *ПРОМАХ\\!*"
+        is_win = (emo=="🏀" and res.dice.value in) or (emo=="⚽" and res.dice.value in) or (emo=="🎯" and res.dice.value==6)
+        win = "🎉 *ГОЛ / ПОПАДАНИЕ\\!*" if is_win else "❌ *ПРОМАХ\\!*"
         m = types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("🔄 Еще раз", callback_data=c.data), types.InlineKeyboardButton("⬅️ Игры", callback_data="game_center"))
         bot.send_message(cid, f"{win}\n━━━━━━━━━━\n📊 Очки: `{res.dice.value}`", parse_mode='MarkdownV2', reply_markup=m)
         
